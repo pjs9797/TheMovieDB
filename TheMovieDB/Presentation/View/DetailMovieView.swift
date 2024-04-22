@@ -2,6 +2,8 @@ import UIKit
 import SnapKit
 
 class DetailMovieView: UIView {
+    let scrollView = UIScrollView()
+    let contentView = UIView()
     let movieImageView: UIImageView = {
         let imageView = UIImageView()
         return imageView
@@ -75,7 +77,7 @@ class DetailMovieView: UIView {
         layout.scrollDirection = .horizontal
         let screenWidth = UIScreen.main.bounds.width
         let cellWidth = (screenWidth - 40) / 2
-        let cellHeight = 150*Constants.standardHeight
+        let cellHeight = 180*Constants.standardHeight
         layout.itemSize = CGSize(width: cellWidth*Constants.standardWidth, height: cellHeight*Constants.standardWidth)
         layout.minimumLineSpacing = 10*Constants.standardHeight
         layout.minimumInteritemSpacing = 0*Constants.standardWidth
@@ -97,16 +99,30 @@ class DetailMovieView: UIView {
     }
     
     private func layout() {
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
         [movieImageView,bookMarkButton,titleLabel,movieTitleLabel,ratingLabel,movieRatingLabel,releaseDateLabel,movieReleaseDateLabel,overViewLabel,movieOverViewLabel,youtubeVideoLabel,noneVideoLabel,youtubeCollectionView]
             .forEach{
-                addSubview($0)
+                contentView.addSubview($0)
             }
+        
+        scrollView.snp.makeConstraints { make in
+            make.width.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(self.safeAreaLayoutGuide.snp.top)
+            make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
+        }
+        
+        contentView.snp.makeConstraints { make in
+            make.width.equalTo(scrollView)
+            make.top.leading.trailing.bottom.equalToSuperview()
+        }
         
         movieImageView.snp.makeConstraints { make in
             make.width.equalTo(150*Constants.standardWidth)
             make.height.equalTo(200*Constants.standardHeight)
             make.leading.equalToSuperview().offset(10*Constants.standardWidth)
-            make.top.equalTo(self.safeAreaLayoutGuide.snp.top).offset(20*Constants.standardHeight)
+            make.top.equalToSuperview().offset(20*Constants.standardHeight)
         }
         
         bookMarkButton.snp.makeConstraints { make in
@@ -168,10 +184,11 @@ class DetailMovieView: UIView {
         }
         
         youtubeCollectionView.snp.makeConstraints { make in
-            make.height.equalTo(150*Constants.standardHeight)
+            make.height.equalTo(180*Constants.standardHeight)
             make.leading.equalToSuperview().offset(20*Constants.standardWidth)
             make.trailing.equalToSuperview()
             make.top.equalTo(youtubeVideoLabel.snp.bottom).offset(10*Constants.standardHeight)
+            make.bottom.equalToSuperview().offset(-5*Constants.standardHeight)
         }
     }
 }

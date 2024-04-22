@@ -90,6 +90,20 @@ extension SearchMovieViewController {
     }
     
     func bindState(reactor: SearchMovieReactor){
+        reactor.state.map{ $0.movies }
+            .distinctUntilChanged()
+            .bind(onNext: { [weak self] movies in
+                if movies.isEmpty {
+                    self?.searchView.nonMovieLabel.isHidden = false
+                    self?.searchView.movieListCollectionView.isHidden = true
+                }
+                else{
+                    self?.searchView.nonMovieLabel.isHidden = true
+                    self?.searchView.movieListCollectionView.isHidden = false
+                }
+            })
+            .disposed(by: disposeBag)
+        
         reactor.state.map { $0.movies }
             .distinctUntilChanged()
             .bind(to: searchView.movieListCollectionView.rx.items(cellIdentifier: "SubCollectionViewCell", cellType: MovieListCollectionViewCell.self)) { (index, movie, cell) in

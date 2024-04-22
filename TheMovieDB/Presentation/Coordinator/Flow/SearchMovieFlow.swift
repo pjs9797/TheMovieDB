@@ -14,6 +14,8 @@ class SearchMovieFlow: Flow {
         self.rootViewController = rootViewController
         self.movieAPIUseCase = movieAPIUseCase
         self.movieLocalDBUseCase = movieLocalDBUseCase
+        self.rootViewController.delegate = nil
+        self.rootViewController.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     func navigate(to step: Step) -> FlowContributors {

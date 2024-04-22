@@ -16,6 +16,8 @@ class MovieListFlow: Flow {
         self.movieAPIUseCase = movieAPIUseCase
         self.movieLocalDBUseCase = movieLocalDBUseCase
         self.movieListreactor = MovieListReactor(movieAPIUseCase: self.movieAPIUseCase, movieLocalDBUseCase: self.movieLocalDBUseCase)
+        self.rootViewController.delegate = nil
+        self.rootViewController.interactivePopGestureRecognizer?.isEnabled = true
     }
     
     func navigate(to step: Step) -> FlowContributors {

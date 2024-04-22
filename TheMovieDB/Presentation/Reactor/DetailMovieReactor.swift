@@ -1,4 +1,5 @@
 import ReactorKit
+import UIKit
 import Foundation
 import RxCocoa
 import RxFlow
@@ -26,6 +27,7 @@ class DetailMovieReactor: ReactorKit.Reactor, Stepper {
         case setDetailMovieData(DetailMovie)
         case setYoutubeData([Youtube])
         case setBookMark(Bool)
+        case setCanOpenYoutubeApp(URL)
     }
     
     struct State {
@@ -37,7 +39,8 @@ class DetailMovieReactor: ReactorKit.Reactor, Stepper {
         var voteAverage: Double?
         var releaseDate: String = ""
         var overView: String?
-        var youtubeList: [Youtube] = []
+        var youtubes: [Youtube] = []
+        var youtubeUrl: URL?
     }
     
     func mutate(action: Action) -> Observable<Mutation> {
@@ -69,13 +72,19 @@ class DetailMovieReactor: ReactorKit.Reactor, Stepper {
                     .map{ .setBookMark($0)}
             }
         case .selectYoutube(let key):
-            switch currentState.flowType {
-            case .list:
-                self.steps.accept(MovieListStep.navigateToYoutubePlayerViewController(key: key, flowType: .list))
-            case .search:
-                self.steps.accept(SearchMovieStep.navigateToYoutubePlayerViewController(key: key, flowType: .search))
+            guard let url = URL(string: "youtube://\(key)") else { return .empty() }
+            if UIApplication.shared.canOpenURL(url) {
+                return .just(.setCanOpenYoutubeApp(url))
             }
-            return .empty()
+            else{
+                switch currentState.flowType {
+                case .list:
+                    self.steps.accept(MovieListStep.navigateToYoutubePlayerViewController(key: key, flowType: .list))
+                case .search:
+                    self.steps.accept(SearchMovieStep.navigateToYoutubePlayerViewController(key: key, flowType: .search))
+                }
+                return .empty()
+            }
         }
     }
     
@@ -91,7 +100,9 @@ class DetailMovieReactor: ReactorKit.Reactor, Stepper {
         case .setBookMark(let status):
             newState.isBookMarked = status
         case .setYoutubeData(let youtubeList):
-            newState.youtubeList = youtubeList
+            newState.youtubes = youtubeList
+        case .setCanOpenYoutubeApp(let url):
+            newState.youtubeUrl = url
         }
         return newState
     }

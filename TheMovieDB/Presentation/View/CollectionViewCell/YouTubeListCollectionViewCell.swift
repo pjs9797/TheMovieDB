@@ -36,7 +36,7 @@ class YouTubeListCollectionViewCell: UICollectionViewCell {
                 
         youtubeImageView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.bottom.equalToSuperview().offset(-30*Constants.standardHeight)
+            make.bottom.equalToSuperview().offset(-60*Constants.standardHeight)
         }
         
         youtubeIcon.snp.makeConstraints { make in
@@ -46,8 +46,9 @@ class YouTubeListCollectionViewCell: UICollectionViewCell {
         }
         
         youtubeTitleLabel.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.top.equalTo(youtubeImageView.snp.bottom).offset(5*Constants.standardHeight)
+            make.bottom.equalToSuperview().offset(-5*Constants.standardHeight)
         }
     }
 }

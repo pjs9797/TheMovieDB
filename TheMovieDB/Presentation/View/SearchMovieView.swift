@@ -24,13 +24,19 @@ class SearchMovieView: UIView {
         button.layer.borderWidth = 1
         return button
     }()
+    let nonMovieLabel: UILabel = {
+        let label = UILabel()
+        label.text = "검색된 영화가 없습니다."
+        label.textColor = .white
+        return label
+    }()
     lazy var movieListCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let screenWidth = UIScreen.main.bounds.width
-        let cellWidth = (screenWidth - 60) / 2
+        let cellWidth = (screenWidth - 40*Constants.standardWidth) / 2
         let cellHeight = cellWidth * 1.5
-        layout.itemSize = CGSize(width: cellWidth*Constants.standardWidth, height: cellHeight*Constants.standardWidth)
+        layout.itemSize = CGSize(width: cellWidth, height: cellHeight*Constants.standardHeight)
         layout.minimumLineSpacing = 10*Constants.standardHeight
         layout.minimumInteritemSpacing = 10*Constants.standardWidth
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -51,7 +57,7 @@ class SearchMovieView: UIView {
     }
     
     private func layout() {
-        [searchTextField,searchButton,movieListCollectionView]
+        [searchTextField,searchButton,nonMovieLabel,movieListCollectionView]
             .forEach{
                 addSubview($0)
             }
@@ -67,6 +73,10 @@ class SearchMovieView: UIView {
             make.width.height.equalTo(50*Constants.standardHeight)
             make.trailing.equalToSuperview().offset(-10*Constants.standardWidth)
             make.top.equalTo(self.safeAreaLayoutGuide.snp.top).offset(10*Constants.standardHeight)
+        }
+        
+        nonMovieLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
         
         movieListCollectionView.snp.makeConstraints { make in

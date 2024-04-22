@@ -60,7 +60,7 @@ extension DetailMovieViewController {
         detailMovieView.youtubeCollectionView.rx.itemSelected
             .map { [weak self] indexPath in
                 guard let self = self else { return "" }
-                let youtubeKey = self.reactor?.currentState.youtubeList[indexPath.row].key
+                let youtubeKey = self.reactor?.currentState.youtubes[indexPath.row].key
                 return youtubeKey ?? ""
             }
             .map{ Reactor.Action.selectYoutube($0) }
@@ -122,10 +122,10 @@ extension DetailMovieViewController {
             })
             .disposed(by: disposeBag)
         
-        reactor.state.map{ $0.youtubeList }
+        reactor.state.map{ $0.youtubes }
             .distinctUntilChanged()
-            .bind(onNext: { [weak self] list in
-                if list.isEmpty {
+            .bind(onNext: { [weak self] youtubes in
+                if youtubes.isEmpty {
                     self?.detailMovieView.noneVideoLabel.isHidden = false
                     self?.detailMovieView.youtubeCollectionView.isHidden = true
                 }
@@ -136,7 +136,7 @@ extension DetailMovieViewController {
             })
             .disposed(by: disposeBag)
         
-        reactor.state.map { $0.youtubeList }
+        reactor.state.map { $0.youtubes }
             .distinctUntilChanged()
             .bind(to: detailMovieView.youtubeCollectionView.rx.items(cellIdentifier: "YouTubeListCollectionViewCell", cellType: YouTubeListCollectionViewCell.self)) { (index, youtube, cell) in
                 if let url = URL(string: "https://img.youtube.com/vi/\(youtube.key)/0.jpg") {
@@ -147,6 +147,13 @@ extension DetailMovieViewController {
                 }
                 cell.youtubeTitleLabel.text = youtube.name
             }
+            .disposed(by: disposeBag)
+        
+        reactor.state.compactMap{ $0.youtubeUrl }
+            .distinctUntilChanged()
+            .bind(onNext: { url in
+                UIApplication.shared.open(url, options: [:], completionHandler: nil)
+            })
             .disposed(by: disposeBag)
     }
 }

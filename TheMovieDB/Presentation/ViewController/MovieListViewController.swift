@@ -40,7 +40,11 @@ class MovieListViewController: UIViewController, ReactorKit.View {
     
     private func setNavigationbar() {
         self.navigationController?.navigationBar.topItem?.title = "영화 목록 - 인기순"
-        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .black
+        navigationBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+        self.navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        self.navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         editButton.tintColor = .systemGreen
         navigationItem.rightBarButtonItem = editButton
     }

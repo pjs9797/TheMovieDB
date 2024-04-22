@@ -6,9 +6,9 @@ class MovieListView: UIView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let screenWidth = UIScreen.main.bounds.width
-        let cellWidth = (screenWidth - 60) / 2
+        let cellWidth = (screenWidth - 40*Constants.standardWidth) / 2
         let cellHeight = cellWidth * 1.5
-        layout.itemSize = CGSize(width: cellWidth*Constants.standardWidth, height: cellHeight*Constants.standardWidth)
+        layout.itemSize = CGSize(width: cellWidth, height: cellHeight*Constants.standardWidth)
         layout.minimumLineSpacing = 10*Constants.standardHeight
         layout.minimumInteritemSpacing = 10*Constants.standardWidth
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)

@@ -45,7 +45,6 @@ class MovieListReactor: ReactorKit.Reactor, Stepper {
             self.steps.accept(MovieListStep.presentSortActionSheet)
             return .empty()
         case .setSortType(let type):
-            print("setSortType",type)
             switch type{
             case .popularity:
                 return .concat([

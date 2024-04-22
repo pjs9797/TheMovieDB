@@ -6,11 +6,7 @@ class AppFlow: Flow {
         return self.rootViewController
     }
     
-    private lazy var rootViewController: UINavigationController = {
-        let navigationController = UINavigationController()
-        navigationController.isNavigationBarHidden = true
-        return navigationController
-    }()
+    private lazy var rootViewController = TabBarController()
     let movieAPIUseCase = MovieAPIUseCase(repository: MovieAPIRepository())
     let movieLocalDBUseCase = MovieLocalDBUseCase(repository: MovieLocalDBRepository())
     
@@ -23,8 +19,6 @@ class AppFlow: Flow {
     }
     
     private func navigateToTabBar() -> FlowContributors {
-        let tabBarController = TabBarController()
-        
         let movieListNavigationController = UINavigationController()
         let searchMovieNavigationController = UINavigationController()
         
@@ -36,9 +30,7 @@ class AppFlow: Flow {
             movieListViewController.tabBarItem = UITabBarItem(title: "홈", image: ThemeManager.Images.home,tag: 0)
             searchMovieViewController.tabBarItem = UITabBarItem(title: "검색", image: ThemeManager.Images.search,tag: 1)
 
-            
-            tabBarController.viewControllers = [movieListViewController, searchMovieViewController]
-            self?.rootViewController.setViewControllers([tabBarController], animated: false)
+            self?.rootViewController.viewControllers = [movieListViewController, searchMovieViewController]
         }
 
         return .multiple(flowContributors: [
